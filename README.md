@@ -11,9 +11,8 @@ Objectives of this project from an application perspective are.
 - Create a Continous Intergration system for the application to allow developers to validate change and merge in code at a faster rate. 
 - Write Intergration tests to prove our API responds to requiests sucsesfully. Along with creating, reading, updateing and deleting data from our database.
 - Getting our application working on kubernetes
-- Write some end to end tests that we can use in a staging enviroments to have validation security in a automation deployment. Do I need this? This suggests I do not trust my tests come back to this come back to this when I have worked on a deployment pattern?
-- Create a Continuous Deployment pipeline so every merge to main will produce a deployment to staging where all tests are again ran then an automate deployment to prudcon should those tests pass.
-- (WIP)
+- Write some end to end tests that we can use in a staging enviroment to have validation in a automation deployment. Do I need this? This suggests I do not trust my tests come back to this come back to this when I have worked on a deployment pattern?
+- Create a Continuous Deployment pipeline so every merge to main will produce a deployment to staging where all tests are again ran then an automate deployment to production should those tests pass.
 
 
 Required Functionality
