@@ -23,4 +23,10 @@ Required Functionality
 - Update a record of user inforamtion 
 - Delete a users inforamtion
 
+## Virtual environment management for local development (Poetry)
+
+## Dependency and package manegement (Poetry) 
+
+
+
 
