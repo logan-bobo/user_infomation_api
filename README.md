@@ -1,4 +1,4 @@
-# user_infomation_api
+# User Infomation Api
 A RESTful API built with Python and Flask allowing us to mannage user infromation such as name, date of birth, address and more through CRUD opperations agaisnt a persistent database. 
 
 This project will be used as a catalyst to improve my software enginnering skills along with practicing new skills via project based learning so as you can immagine is ever evolving! The infrastcurue acompanying this project can be found at - https://github.com/logan-bobo/user_infomation_api_infrastructure.
@@ -23,10 +23,6 @@ Required Functionality
 - Update a record of user inforamtion 
 - Delete a users inforamtion
 
-## Virtual environment management for local development (Poetry)
-
-## Dependency and package manegement (Poetry) 
-
-
-
+The Architechure will be:
+Client --HTTP/S(443)--> API --mongod(27017)--> MongoDB
 
