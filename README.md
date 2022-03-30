@@ -24,5 +24,5 @@ Required Functionality
 - Delete a users inforamtion
 
 The Architechure will be:
-Client --HTTP/S(443)--> API --mongod(27017)--> MongoDB
+Client --HTTP/S(443)--> API --mongod(27017)--> Postgres
 

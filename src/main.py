@@ -1,20 +1,34 @@
 #!/usr/bin/env python3
 
-from pymongo import MongoClient
+import os
 from flask import Flask, jsonify
+from sqlalchemy import create_engine, Column, Integer, Text, MetaData, Table
 
-client = MongoClient("mongodb://test:test@localhost:5001/")
-db = client.user_info 
+engine = create_engine('postgresql://postgres:mysecretpassword@127.0.0.1:5001')
+
+metadata = MetaData()
+user_info = Table(
+    'user_info', metadata,
+    Column('user_email', Text, primary_key=True),
+    Column('fname', Text),
+    Column('lname', Text),
+    Column('mobile_number', Integer),
+)
+
+user_info.create(bind=engine)
+
+insert_user = user_info.insert().values(user_email='test@user.com', fname='test', lname='user', mobile_number= 1234567898 )
+engine.execute(insert_user)
 
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
-def root():
+def root() -> str:
     return "User Information API please see the readme.md for details on how to interact with this service!"
 
 # Create a user
 @app.route("/create/{}", methods=["POST"])
-def create ():
+def create () :
     return jsonify({"user": "create"})
 
 # Return all users
