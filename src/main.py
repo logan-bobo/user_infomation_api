@@ -2,26 +2,28 @@
 
 import os
 from flask import Flask, jsonify
-from sqlalchemy import create_engine, Column, Integer, Text, MetaData, Table, inspect
-
-engine = create_engine('postgresql://postgres:mysecretpassword@127.0.0.1:5001')
-
-metadata = MetaData()
-
-if not inspect(engine).has_table("user_info"):
-    user_info = Table(
-        'user_info', metadata,
-        Column('user_email', Text, primary_key=True),
-        Column('fname', Text),
-        Column('lname', Text),
-        Column('mobile_number', Integer),
-    )
-    user_info.create(bind=engine)
-
-insert_user = user_info.insert().values(user_email='test@user.com', fname='test', lname='user', mobile_number= 1234567898 )
-engine.execute(insert_user)
+from flask_sqlalchemy import SQLAlchemy, inspect
+from datetime import datetime
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@127.0.0.1:5001'
+db = SQLAlchemy(app)
+
+inspector = inspect(db.engine)
+
+if not inspector.has_table('users'):
+    # Schema Class
+    class Users(db.Model):
+        email = db.Column(db.String(100), nullable=False, primary_key=True)
+        fname = db.Column(db.String(50), nullable=False)
+        lname = db.Column(db.String(50), nullable=False)
+        date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Create Schema
+    db.create_all()
+
+
+
 
 @app.route("/", methods=["GET"])
 def root() -> str:
