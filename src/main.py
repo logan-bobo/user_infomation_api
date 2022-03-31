@@ -2,20 +2,21 @@
 
 import os
 from flask import Flask, jsonify
-from sqlalchemy import create_engine, Column, Integer, Text, MetaData, Table
+from sqlalchemy import create_engine, Column, Integer, Text, MetaData, Table, inspect
 
 engine = create_engine('postgresql://postgres:mysecretpassword@127.0.0.1:5001')
 
 metadata = MetaData()
-user_info = Table(
-    'user_info', metadata,
-    Column('user_email', Text, primary_key=True),
-    Column('fname', Text),
-    Column('lname', Text),
-    Column('mobile_number', Integer),
-)
 
-user_info.create(bind=engine)
+if not inspect(engine).has_table("user_info"):
+    user_info = Table(
+        'user_info', metadata,
+        Column('user_email', Text, primary_key=True),
+        Column('fname', Text),
+        Column('lname', Text),
+        Column('mobile_number', Integer),
+    )
+    user_info.create(bind=engine)
 
 insert_user = user_info.insert().values(user_email='test@user.com', fname='test', lname='user', mobile_number= 1234567898 )
 engine.execute(insert_user)
