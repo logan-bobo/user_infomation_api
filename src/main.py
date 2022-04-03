@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy, inspect
 from datetime import datetime
 
@@ -11,28 +11,49 @@ db = SQLAlchemy(app)
 
 inspector = inspect(db.engine)
 
+# Schema Class
+class Users(db.Model):
+    email = db.Column(db.String(100), nullable=False, primary_key=True)
+    fname = db.Column(db.String(50), nullable=False)
+    lname = db.Column(db.String(50), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
 if not inspector.has_table('users'):
-    # Schema Class
-    class Users(db.Model):
-        email = db.Column(db.String(100), nullable=False, primary_key=True)
-        fname = db.Column(db.String(50), nullable=False)
-        lname = db.Column(db.String(50), nullable=False)
-        date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    
     # Create Schema
     db.create_all()
-
-
-
 
 @app.route("/", methods=["GET"])
 def root() -> str:
     return "User Information API please see the readme.md for details on how to interact with this service!"
 
 # Create a user
-@app.route("/create/{}", methods=["POST"])
-def create () :
-    return jsonify({"user": "create"})
+@app.route("/create", methods=["POST"])
+def create():
+    request_data = request.get_json()
+    print(request_data)
+
+    request_email = None
+    request_fname = None
+    request_lname = None
+
+    if 'email' in request_data:
+        request_email = request_data["email"]
+    else:
+        return "Request did not contain the user email", 400
+    
+    if 'fname' in request_data:
+        request_fname = request_data["fname"]
+    else:
+        return "Request did not contain the users first name", 400
+    
+    if 'lname' in request_data:
+        request_lname = request_data["lname"]
+    else:
+        return "Request did not contain the users last name", 400
+
+    db.engine.execute(Users.insert().values(email=request_email, fname=request_fname, lname=request_lname))
+    
+    return "User data created sucsesfully", 200
 
 # Return all users
 @app.route("/read", methods=["GET"])
