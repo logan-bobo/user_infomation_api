@@ -11,12 +11,11 @@ db = SQLAlchemy(app)
 
 inspector = inspect(db.engine)
 
-# Schema Class
-class Users(db.Model):
-    email = db.Column(db.String(100), nullable=False, primary_key=True)
-    fname = db.Column(db.String(50), nullable=False)
-    lname = db.Column(db.String(50), nullable=False)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fname = db.Column(db.String(80), unique=False, nullable=False)
+    lname = db.Column(db.String(80), unique=False, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
 
 if not inspector.has_table('users'):
     # Create Schema
@@ -30,30 +29,23 @@ def root() -> str:
 @app.route("/create", methods=["POST"])
 def create():
     request_data = request.get_json()
-    print(request_data)
-
-    request_email = None
-    request_fname = None
-    request_lname = None
-
-    if 'email' in request_data:
-        request_email = request_data["email"]
-    else:
+    
+    if 'email' not in request_data:
         return "Request did not contain the user email", 400
-    
-    if 'fname' in request_data:
-        request_fname = request_data["fname"]
-    else:
+    if 'fname' not in request_data:
         return "Request did not contain the users first name", 400
-    
-    if 'lname' in request_data:
-        request_lname = request_data["lname"]
-    else:
+    if 'lname' not in request_data:
         return "Request did not contain the users last name", 400
 
-    db.engine.execute(Users.insert().values(email=request_email, fname=request_fname, lname=request_lname))
-    
-    return "User data created sucsesfully", 200
+    new_user = User(
+        fname=request_data['fname'], 
+        lname=request_data['lname'], 
+        email=request_data['email']
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+    return "User created sucsesfully\n", 200
 
 # Return all users
 @app.route("/read", methods=["GET"])
@@ -78,3 +70,5 @@ def delete():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
+
