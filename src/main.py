@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
+import os
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy, inspect
 
 app = Flask(__name__)
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = "postgresql://postgres:mysecretpassword@127.0.0.1:5001"
+] = os.environ['DATABASE_URL']
+# "postgresql://postgres:mysecretpassword@127.0.0.1:5001"
 db = SQLAlchemy(app)
 
 inspector = inspect(db.engine)
-
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,20 +19,15 @@ class User(db.Model):
     lname = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-
 if not inspector.has_table("users"):
-    # Create Schema
     db.create_all()
 
-# Root
 @app.route("/", methods=["GET"])
 def root() -> str:
     return "User Information API please see the readme.md for details on how to interact with this service!"
 
-
-# Create a user
-@app.route("/create", methods=["POST"])
-def create():
+@app.route("/create-user", methods=["POST"])
+def create() -> str:
     request_data = request.get_json()
 
     if "email" not in request_data:
@@ -51,27 +47,36 @@ def create():
     db.session.commit()
     return "User created sucsesfully\n", 200
 
+@app.route("/read-users", methods=["GET"])
+def read_users():
+    users_info = {}
+    users = User.query.order_by(User.fname).all()
+    for user in users:
+        users_info[user.id] = {
+            "fname": user.fname,
+            "lname": user.lname, 
+            "email": user.email,
+        }
+    return jsonify(users_info)
 
-# Return all users
-@app.route("/read", methods=["GET"])
-def read():
-    return jsonify({"user": "read"})
+
+@app.route("/read/<int:user_id>", methods=["GET"])
+def read_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user_info = {
+        "fname": user.fname,
+        "lname": user.lname,
+        "email": user.email,
+    }
+    return jsonify(user_info)
 
 
-# Read the data of a specific user
-@app.route("/read/{id}", methods=["GET"])
-def read_all():
-    return jsonify({"user": "read"})
-
-
-# Update a user
-@app.route("/update/{id}", methods=["PUT"])
+@app.route("/update/<int:user_id>", methods=["PUT"])
 def update():
     return jsonify({"user": "update"})
 
 
-# Delete a user
-@app.route("/delete/{id}", methods=["DELETE"])
+@app.route("/delete/<int:user_id>", methods=["DELETE"])
 def delete():
     return jsonify({"user": "delete"})
 
