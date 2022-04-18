@@ -62,7 +62,7 @@ def read_users():
 
 @app.route("/read/<int:user_id>", methods=["GET"])
 def read_user(user_id):
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first_or_404()
     user_info = {
         "fname": user.fname,
         "lname": user.lname,

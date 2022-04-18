@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pytest
+
 from src.main import (
     delete, 
     root, 
@@ -8,8 +10,3 @@ from src.main import (
     read_all, 
     update,  
 )
-
-def test_root():
-    expected = "User Information API please see the readme.md for details on how to interact with this service!"
-    actual = root()
-    assert expected == actual
