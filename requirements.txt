@@ -1,0 +1,4 @@
+flask~=2.1.2
+flask_sqlalchemy
+pytest
+SQLAlchemy~=1.4.39

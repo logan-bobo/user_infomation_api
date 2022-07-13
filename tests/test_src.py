@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.main import (
+from user_information_api.main import (
     delete, 
     root, 
     create, 
