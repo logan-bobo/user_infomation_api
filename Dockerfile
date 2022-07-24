@@ -1,9 +1,13 @@
-FROM python:3.10.4
+FROM python
 
 WORKDIR /app
 
-COPY user_information_api /app
+COPY src ./
 
-CMD ["./app/user_information_api/main.py"]
+COPY requirements.txt .
 
+RUN pip install -r requirements.txt
 
+ENV FLASK_APP=main
+
+CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]

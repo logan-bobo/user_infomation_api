@@ -10,4 +10,16 @@ test-read-all:
 	curl http://127.0.0.1:5000/read-users
 
 test-read-user:
-	curl http://127.0.0.1:5000/read/1
+	curl -X GET http://127.0.0.1:5000/read \
+		-H 'Content-Type: application/json' \
+		-d '{"email":"barry1@gmail.com"}'
+
+test-delete-user:
+	curl -X DELETE http://127.0.0.1:5000/delete \
+		-H 'Content-Type: application/json' \
+		-d '{"id":"1"}'
+
+test-update-user:
+	curl -X PUT http://127.0.0.1:5000/update \
+		-H 'Content-Type: application/json' \
+		-d '{"id":"2", "fname": "sally"}'
