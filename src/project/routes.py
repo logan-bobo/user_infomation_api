@@ -1,26 +1,9 @@
 import json
 
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect
+from . import app, db
+from .models import User
+from flask import jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../app.db"
-db = SQLAlchemy(app)
-
-inspector = inspect(db.engine)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    fname = db.Column(db.String(80), unique=False, nullable=False)
-    lname = db.Column(db.String(80), unique=False, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-
-if not inspector.has_table("users"):
-    db.create_all()
 
 
 @app.route("/", methods=["GET"])
