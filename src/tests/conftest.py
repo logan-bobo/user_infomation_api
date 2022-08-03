@@ -1,7 +1,7 @@
 import pytest
 
-from src.project import app
-from src.project.models import User
+from src.user_info import app
+from src.user_info.models import User
 
 
 @pytest.fixture(scope='module')

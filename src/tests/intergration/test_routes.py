@@ -1,4 +1,3 @@
-from src.project import app
 
 
 def test_main_route(test_client):
