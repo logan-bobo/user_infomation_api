@@ -19,6 +19,24 @@ def test_main_route_fail_on_post(test_client):
     assert response.status_code != 200
 
 
+def test_user_creation(test_client):
+    """
+    We can create a user with the correct parameters passed
+    """
+    response = test_client.post(
+        '/create-user',
+        data=json.dumps({
+            "fname": "test",
+            "lname": "test",
+            "email": "test@test.com"
+        }),
+        content_type='application/json'
+    )
+    print(response.data)
+    assert response.status_code == 200
+    assert b"user created successfully" \
+        in response.data
+
 
 def test_read_users_route():
     pass

@@ -6,3 +6,6 @@ class User(db.Model):
     fname = db.Column(db.String(80), unique=False, nullable=False)
     lname = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+
+db.create_all()
