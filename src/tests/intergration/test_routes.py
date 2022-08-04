@@ -1,3 +1,4 @@
+import json
 
 
 def test_main_route(test_client):
@@ -10,8 +11,13 @@ def test_main_route(test_client):
         in response.data
 
 
-def test_create_user_route():
-    pass
+def test_main_route_fail_on_post(test_client):
+    """
+    When we send a post requests to the root of the API we get a failure
+    """
+    response = test_client.post('/')
+    assert response.status_code != 200
+
 
 
 def test_read_users_route():
