@@ -26,3 +26,9 @@ Functionality required from the API
 - Read records of user information
 - Update a record of user information 
 - Delete a users information
+
+Interesting Extra TODO:-
+[ ] Investigate lru_cache for caching function output on users or maybe even add a full caching layer with redis
+[ ] Move away from SQLite to PostgreSQL 
+[ ] Docker compose for backend, caching layer and API
+[ ] Think about application metrics we can get
