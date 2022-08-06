@@ -35,7 +35,7 @@ def create() -> json:
         db.session.commit()
         return jsonify(status="success", message="user created successfully"), 200
     except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
+        error = str(e)
         return jsonify(status="error", message=f"unable to create user due to: {error}"), 500
 
 
