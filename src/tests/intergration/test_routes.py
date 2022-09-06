@@ -5,7 +5,7 @@ def test_main_route(test_client):
     """
     When we hit the root of the API we expect the help message.
     """
-    response = test_client.get('/')
+    response = test_client.get('/v1/')
     assert response.status_code == 200
     assert b"User Information API please see the readme.md for details on how to interact with this service!" \
         in response.data
@@ -24,7 +24,7 @@ def test_user_creation(test_client):
     We can create a user with the correct parameters passed.
     """
     response = test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "fname": "test",
             "lname": "test",
@@ -42,7 +42,7 @@ def test_user_creation_fails_when_no_email_in_request_to_create_user(test_client
     User creation will fail when we send a post request to the `create-user` endpoint with no email in request.
     """
     response = test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "fname": "test",
             "lname": "test",
@@ -59,7 +59,7 @@ def test_user_creation_fails_when_no_fname_in_request_to_create_user(test_client
     User creation will fail when we send a post request to the `create-user` endpoint with no first name in request.
     """
     response = test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "lname": "test",
             "email": "test@test.com"
@@ -76,7 +76,7 @@ def test_user_creation_fails_when_no_lname_in_request_to_create_user(test_client
     User creation will fail when we send a post request to the `create-user` endpoint with no last name in request.
     """
     response = test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "fname": "test",
             "email": "test@test.com"
@@ -93,7 +93,7 @@ def test_user_can_not_be_created_due_to_non_unique_email(test_client):
     User creation will fail when we send a post request to the `create-user` endpoint does not contain a unique email.
     """
     test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "fname": "test",
             "lname": "test",
@@ -103,7 +103,7 @@ def test_user_can_not_be_created_due_to_non_unique_email(test_client):
     )
 
     response = test_client.post(
-        '/create-user',
+        '/v1/create-user',
         data=json.dumps({
             "fname": "test",
             "lname": "test",

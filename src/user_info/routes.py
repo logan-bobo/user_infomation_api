@@ -6,14 +6,14 @@ from flask import jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
 
 
-@app.route("/", methods=["GET"])
+@app.route("/v1/", methods=["GET"])
 def root() -> json:
     return jsonify(
-        status="User Information API please see the readme.md for details on how to interact with this service!"
+        status="User Information API V1 please see the readme.md for details on how to interact with this service!"
     ), 200
 
 
-@app.route("/create-user", methods=["POST"])
+@app.route("/v1/create-user", methods=["POST"])
 def create() -> json:
     request_data = request.get_json()
 
@@ -39,8 +39,8 @@ def create() -> json:
         return jsonify(status="error", message=f"unable to create user due to: {error}"), 500
 
 
-@app.route("/read-users", methods=["GET"])
-def read_users():
+@app.route("/v1/read-users", methods=["GET"])
+def read_users() -> json:
     users_info = {}
     users = User.query.order_by(User.fname).all()
     for user in users:
@@ -52,7 +52,7 @@ def read_users():
     return jsonify(users_info), 200
 
 
-@app.route("/read", methods=["GET"])
+@app.route("/v1/read", methods=["GET"])
 def read_user() -> json:
     request_data = request.get_json()
 
@@ -71,7 +71,7 @@ def read_user() -> json:
     return jsonify(user_info), 200
 
 
-@app.route("/update", methods=["PUT"])
+@app.route("/v1/update", methods=["PUT"])
 def update() -> json:
     request_data = request.get_json()
 
@@ -98,7 +98,7 @@ def update() -> json:
     return jsonify(status="success", message="User updated successfully"), 200
 
 
-@app.route("/delete", methods=["DELETE"])
+@app.route("/v1/delete", methods=["DELETE"])
 def delete() -> json:
     request_data = request.get_json()
 

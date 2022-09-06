@@ -4,13 +4,13 @@ from src.user_info import app
 from src.user_info.models import User
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def new_user():
     user = User(id=1, fname='test', lname='user', email='test@user.com')
     return user
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def test_client():
     flask_app = app
 
