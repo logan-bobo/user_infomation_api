@@ -13,8 +13,8 @@ def root() -> json:
     ), 200
 
 
-@app.route("/v1/create-user", methods=["POST"])
-def create() -> json:
+@app.route("/v1/users", methods=["POST"])
+def create_user() -> json:
     request_data = request.get_json()
 
     if "email" not in request_data:
@@ -39,30 +39,31 @@ def create() -> json:
         return jsonify(status="error", message=f"unable to create user due to: {error}"), 500
 
 
-@app.route("/v1/read-users", methods=["GET"])
+@app.route("/v1/users", methods=["GET"])
 def read_users() -> json:
-    users_info = {}
-    users = User.query.order_by(User.fname).all()
+    users_info = []
+
+    users = User.query.order_by(User.uid).all()
+
     for user in users:
-        users_info[user.id] = {
+        users_info.append({
+            "uid": user.uid,
             "fname": user.fname,
             "lname": user.lname,
             "email": user.email,
-        }
+        })
     return jsonify(users_info), 200
 
 
-@app.route("/v1/read", methods=["GET"])
-def read_user() -> json:
-    request_data = request.get_json()
-
-    user = User.query.filter_by(email=request_data["email"]).first()
+@app.route("/v1/users/<int:uid>", methods=["GET"])
+def read_user(uid: int) -> json:
+    user = User.query.filter_by(uid=request.view_args["uid"]).first()
 
     if user is None:
         return jsonify(status="error", message="user not found"), 400
 
     user_info = {
-        "id": user.id,
+        "id": user.uid,
         "fname": user.fname,
         "lname": user.lname,
         "email": user.email,
@@ -71,17 +72,14 @@ def read_user() -> json:
     return jsonify(user_info), 200
 
 
-@app.route("/v1/update", methods=["PUT"])
-def update() -> json:
+@app.route("/v1/users/<int:uid>", methods=["PUT"])
+def update_user(uid: int) -> json:
     request_data = request.get_json()
-
-    if "id" not in request_data:
-        return jsonify(status="error", message="please supply a user ID"), 400
 
     if not any(key in request_data for key in ['fname', 'email', 'lname']):
         return jsonify(status="error", message="invalid parameters"), 400
 
-    user = User.query.filter_by(id=request_data["id"]).first()
+    user = User.query.filter_by(uid=request.view_args["uid"]).first()
 
     if user is None:
         return jsonify(status="error", message="user not found"), 400
@@ -98,14 +96,9 @@ def update() -> json:
     return jsonify(status="success", message="User updated successfully"), 200
 
 
-@app.route("/v1/delete", methods=["DELETE"])
-def delete() -> json:
-    request_data = request.get_json()
-
-    if "id" not in request_data:
-        return jsonify(status="error", message="please supply a user ID"), 400
-
-    user = User.query.get(request_data["id"])
+@app.route("/v1/users/<int:uid>", methods=["DELETE"])
+def delete_user(uid: int) -> json:
+    user = User.query.get(request.view_args["uid"])
 
     db.session.delete(user)
     db.session.commit()
